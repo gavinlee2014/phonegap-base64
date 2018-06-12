@@ -15,6 +15,7 @@
         <clobbers target="navigator.Base64" />
     </js-module>
 
+    <!-- ios -->
     <platform name="ios">
         <config-file parent="/*" target="config.xml">
             <feature name="Base64">
