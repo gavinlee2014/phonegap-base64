@@ -4,4 +4,6 @@
 
 - (void)encodeFile:(CDVInvokedUrlCommand*)command;
 
+- (void)encodeString:(CDVInvokedUrlCommand*)command;
+
 @end

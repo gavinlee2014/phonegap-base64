@@ -10,48 +10,75 @@
 
 package com.badrit.Base64;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.util.ArrayList;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.text.Html;
 import android.util.Base64;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
-import org.apache.cordova.LOG;
 
 public class Base64Plugin extends CordovaPlugin {
 
 	@Override
-	public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
-		if ("encodeFile".equals(action)) {
-			
-			try {
-				JSONObject parameters = args.getJSONObject(0);
-				if (parameters != null) {
-					String base64String = encodeFile(parameters.getString("filePath"));
-					callbackContext.success(base64String);
-				}
-			} catch (Exception e) {
+	public boolean execute(String action, JSONArray args, final CallbackContext callbackContext) throws JSONException {
 
-			}
-			
-			return true;
-		}
+        final JSONObject parameters = args.getJSONObject(0);
+
+        if ("encodeFile".equals(action)) {
+            cordova.getThreadPool().execute(new Runnable() {
+                public void run() {
+                    try {
+                        if (parameters != null) {
+                            String base64String = encodeFile(parameters.getString("filePath"));
+                            callbackContext.success(base64String);
+                        }
+                        else {
+                            callbackContext.error("filePath is empty");
+                        }
+                    }
+                    catch (Exception e) {
+                        callbackContext.error(e.getMessage());
+                    }
+                }
+            });
+            return true;
+        }
+
+        if ("encodeString".equals(action)) {
+            cordova.getThreadPool().execute(new Runnable() {
+                public void run() {
+                    try {
+                        if (parameters != null) {
+                            String base64String = encodeString(parameters.getString("content"));
+                            callbackContext.success(base64String);
+                        }
+                        else {
+                            callbackContext.error("content is empty");
+                        }
+                    }
+                    catch (Exception e) {
+                        callbackContext.error(e.getMessage());
+                    }
+                }
+            });
+
+            return true;
+        }
+
+
 		return false; 
 	}
+
+	private String encodeString(String content) {
+	    return Base64.encodeToString(content.getBytes(), Base64.DEFAULT);
+    }
 
 	private String encodeFile(String filePath) {
 		String imgStr = "";
@@ -80,7 +107,7 @@ public class Base64Plugin extends CordovaPlugin {
 			fileInputStream.read(bytes);
 
 			imgStr = Base64.encodeToString(bytes, Base64.DEFAULT);
-			// imgStr = "data:image/*;charset=utf-8;base64," + imgStr;
+//			imgStr = "data:image/*;charset=utf-8;base64," + imgStr;
 		} catch (Exception e) {
 			return imgStr;
 		}
