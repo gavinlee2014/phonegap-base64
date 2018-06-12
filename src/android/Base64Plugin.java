@@ -80,7 +80,7 @@ public class Base64Plugin extends CordovaPlugin {
 			fileInputStream.read(bytes);
 
 			imgStr = Base64.encodeToString(bytes, Base64.DEFAULT);
-			imgStr = "data:image/*;charset=utf-8;base64," + imgStr;
+			// imgStr = "data:image/*;charset=utf-8;base64," + imgStr;
 		} catch (Exception e) {
 			return imgStr;
 		}
