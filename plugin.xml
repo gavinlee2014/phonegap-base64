@@ -15,6 +15,15 @@
         <clobbers target="navigator.Base64" />
     </js-module>
 
+    <platform name="ios">
+        <config-file parent="/*" target="config.xml">
+            <feature name="Base64">
+                <param name="ios-package" value="Base64Plugin" onload="true"/>
+            </feature>
+        </config-file>
+        <header-file src="src/ios/Base64Plugin.h"/>
+        <source-file src="src/ios/Base64Plugin.m"/>
+    </platform>
     <!-- android -->
     <platform name="android">
         <config-file target="res/xml/config.xml" parent="/*">
